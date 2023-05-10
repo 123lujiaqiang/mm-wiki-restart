@@ -284,6 +284,76 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	return
 }
 
+// insert document and write content
+func (d *Document) InsertContent(documentValue map[string]interface{}, content string) (id int64, err error) {
+
+	db := G.DB()
+	// start db begin
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+
+	// 处理同级排序编号
+	parentId := documentValue["parent_id"].(string)
+	spaceId := documentValue["space_id"].(string)
+
+	sequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
+	if err != nil {
+		sequence = 0
+	}
+
+	sequence += 1
+	documentValue["sequence"] = strconv.Itoa(sequence)
+
+	var rs *mysql.ResultSet
+	documentValue["create_time"] = time.Now().Unix()
+	documentValue["update_time"] = time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Insert(Table_Document_Name, documentValue), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	// create document page file
+	document := map[string]string{
+		"space_id":  documentValue["space_id"].(string),
+		"parent_id": documentValue["parent_id"].(string),
+		"name":      documentValue["name"].(string),
+		"type":      fmt.Sprintf("%d", documentValue["type"].(int)),
+		"path":      documentValue["path"].(string),
+	}
+	_, pageFile, err := d.GetParentDocumentsByDocument(document)
+	err = utils.Document.CreateAndWrite(pageFile, content)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Commit()
+	if err != nil {
+		return
+	}
+
+	userId := documentValue["create_user_id"].(string)
+	// create document log
+	go func(userId, documentId, spaceId string) {
+		_, err := LogDocumentModel.CreateAction(userId, documentId, spaceId)
+		if err != nil {
+			logs.Error("create document add log err=%s", err.Error())
+		}
+	}(userId, fmt.Sprintf("%d", id), spaceId)
+
+	// follow document
+	go func(userId, documentId string) {
+		_, err := FollowModel.CreateAutoFollowDocument(userId, documentId)
+		if err != nil {
+			logs.Error("follow document err=%s", err.Error())
+		}
+	}(userId, fmt.Sprintf("%d", id))
+	return
+}
+
 // update document by document_id
 func (d *Document) Update(documentId string, documentValue map[string]interface{}, comment string, spaceId string) (id int64, err error) {
 	db := G.DB()

@@ -17,6 +17,10 @@
                    data-link="/document/add?space_id={{$spaceDocument.space_id}}&parent_id={{$spaceDocument.document_id}}">
                     <span class="fa fa-plus-square-o"></span>
                 </a>
+                <a name="upload_document"
+                   data-link="/document/upload?space_id={{$spaceDocument.space_id}}&parent_id={{$spaceDocument.document_id}}">
+                    <span class="fa fa-arrow-circle-up"></span>
+                </a>
             </h4>
             <hr>
             <ul id="dir_tree" class="ztree"></ul>
@@ -42,6 +46,7 @@
     {{end}}
     Document.ListTree("#dir_tree", documentsData, {{$defaultDocumentId}}, {{.is_editor}}, {{.is_delete}});
     Layers.bindIframe("[name='create_document']", "创建文档", "345px", "800px");
+    Layers.bindIframe("[name='upload_document']","上传文档","345px", "800px")
 </script>
 {{/* markdown显示 */}}
 <iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes"

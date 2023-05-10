@@ -213,8 +213,9 @@ var Document = {
             var addBtn = $("#addBtn_" + treeNode.tId);
             if (addBtn.length > 0) return;
 
-            var spanHtml = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='新建文档' onfocus='this.blur();'></span>";
-            sObj.append(spanHtml);
+
+            var spanAddHtml = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='新建文档' onfocus='this.blur();'></span>";
+            sObj.append(spanAddHtml);
 
             // bind add
             var addBtn = $("#addBtn_" + treeNode.tId);
@@ -224,6 +225,28 @@ var Document = {
                     type: 2,
                     skin: Layers.skin,
                     title: '<strong>创建文档</strong>',
+                    shadeClose: true,
+                    shade: 0.6,
+                    maxmin: true,
+                    area: ["800px", "345px"],
+                    content: content,
+                    padding: "10px"
+                });
+                return false;
+            });
+
+            var uploadBtn = $("#uploadBtn_" + treeNode.tId);
+            if (uploadBtn.length > 0) return;
+            var spanUpHtml = "<span class='button add' id='uploadBtn_" + treeNode.tId + "' title='上传文档' onfocus='this.blur();'></span>";
+            sObj.append(spanUpHtml);
+
+            var uploadBtn = $("#uploadBtn_" + treeNode.tId);
+            if (uploadBtn) uploadBtn.bind("click", function () {
+                var content = "/document/upload?space_id=" + treeNode.spaceId + "&parent_id=" + treeNode.id;
+                layer.open({
+                    type: 2,
+                    skin: Layers.skin,
+                    title: '<strong>上传文档</strong>',
                     shadeClose: true,
                     shade: 0.6,
                     maxmin: true,
