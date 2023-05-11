@@ -40,7 +40,7 @@ var Document = {
             edit: {
                 enable: true,
                 showRemoveBtn: true,
-                showRenameBtn: false
+                showRenameBtn: false,
                 // removeTitle: '删除',
                 // renameTitle: '修改'
             },
@@ -235,9 +235,10 @@ var Document = {
                 return false;
             });
 
+            // 自定义上传按钮
             var uploadBtn = $("#uploadBtn_" + treeNode.tId);
             if (uploadBtn.length > 0) return;
-            var spanUpHtml = "<span class='button add' id='uploadBtn_" + treeNode.tId + "' title='上传文档' onfocus='this.blur();'></span>";
+            var spanUpHtml = "<span class='button edit' id='uploadBtn_" + treeNode.tId + "' title='上传文档' onfocus='this.blur();'></span>";
             sObj.append(spanUpHtml);
 
             var uploadBtn = $("#uploadBtn_" + treeNode.tId);
@@ -258,8 +259,14 @@ var Document = {
             });
         }
 
+        /**
+         * 鼠标移开事件
+         * @param treeId
+         * @param treeNode
+         */
         function removeHoverDom(treeId, treeNode) {
             $("#addBtn_" + treeNode.tId).unbind().remove();
+            $("#uploadBtn_" + treeNode.tId).unbind().remove();
         }
 
         $(document).ready(function () {
