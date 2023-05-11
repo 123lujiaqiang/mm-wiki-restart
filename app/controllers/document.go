@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/phachon/mm-wiki/app/services"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
@@ -77,7 +78,6 @@ func (this *DocumentController) Index() {
 
 // add document
 func (this *DocumentController) Add() {
-	fmt.Println("add:添加了文档")
 	spaceId := this.GetString("space_id", "0")
 	parentId := this.GetString("parent_id", "0")
 
@@ -130,7 +130,6 @@ func (this *DocumentController) Add() {
 
 // save document
 func (this *DocumentController) Save() {
-	fmt.Println("save:保存了文档")
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/main/index")
 	}
@@ -220,7 +219,6 @@ func (this *DocumentController) Save() {
 
 // upload document
 func (this *DocumentController) Upload() {
-	fmt.Println("upload:拉起上传文档")
 	spaceId := this.GetString("space_id", "0")
 	parentId := this.GetString("parent_id", "0")
 
@@ -272,7 +270,6 @@ func (this *DocumentController) Upload() {
 
 // uploads document
 func (this *DocumentController) Uploads() {
-	//name := "test"
 	name := this.GetString("name")
 	file, _, err := this.GetFile("file")
 
@@ -281,8 +278,16 @@ func (this *DocumentController) Uploads() {
 	if err = this.SaveToFile("file", fmt.Sprintf("upload/%s", name)); err != nil {
 		this.Data["json"] = err.Error()
 		this.Abort("500")
+		this.ErrorLog("保存文件失败：" + err.Error())
 	}
+
 	bytes, err := ioutil.ReadFile(fmt.Sprintf("upload/%s", name))
+
+	if err != nil {
+		this.ErrorLog("读取文件内容失败：" + err.Error())
+		this.jsonError("读取文件内容失败！")
+	}
+
 	content := string(bytes)
 
 	if !this.IsPost() {
@@ -367,6 +372,16 @@ func (this *DocumentController) Uploads() {
 		this.ErrorLog("创建文档失败：" + err.Error())
 		this.jsonError("创建文档失败")
 	}
+
+	//文档创建成功 删除上传文件
+	er := os.Remove(fmt.Sprintf("upload/%s", name))
+	if er != nil {
+		this.ErrorLog("上传文件删除失败： " + err.Error())
+		this.InfoLog("文件路径： " + fmt.Sprintf("upload/%s", name))
+	} else {
+		this.InfoLog("上传文件" + name + "删除成功")
+	}
+
 	this.InfoLog("创建文档 " + utils.Convert.IntToString(documentId, 10) + " 成功")
 	this.jsonSuccess("创建文档成功", nil, "/document/index?document_id="+utils.Convert.IntToString(documentId, 10))
 }
