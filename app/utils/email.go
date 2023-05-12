@@ -73,7 +73,8 @@ func (e *email) MakeDocumentHtmlBody(document map[string]string, view string) (b
 	body = strings.Replace(body, "{{.update_time}}", Date.Format(document["update_time"], "Y-m-d H:i:s"), 1)
 	body = strings.Replace(body, "{{.comment}}", document["comment"], 1)
 	body = strings.Replace(body, "{{.document_url}}", document["url"], 1)
-	body = strings.Replace(body, "{{.copyright}}", global.SYSTEM_COPYRIGHT, 1)
+	//body = strings.Replace(body, "{{.copyright}}", global.SYSTEM_COPYRIGHT, 1)
+	body = strings.Replace(body, "{{.copyright}}", global.SYSTEM_RESET_COPYRIGHT, 1)
 
 	content := string(blackfriday.Run([]byte(document["content"])))
 	body = strings.Replace(body, "{{.document_content}}", content, 1)

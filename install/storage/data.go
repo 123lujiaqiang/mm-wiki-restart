@@ -25,7 +25,8 @@ var (
 
 	RootDir = ""
 
-	CopyRight = global.SYSTEM_COPYRIGHT
+	//CopyRight = global.SYSTEM_COPYRIGHT
+	CopyRight = global.SYSTEM_RESET_COPYRIGHT
 )
 
 const License_Disagree = 0 // 协议不同意

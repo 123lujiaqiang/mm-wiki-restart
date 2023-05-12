@@ -29,7 +29,8 @@ var (
 
 	Version = global.SYSTEM_VERSION
 
-	CopyRight = beego.Str2html(global.SYSTEM_COPYRIGHT)
+	//CopyRight = beego.Str2html(global.SYSTEM_COPYRIGHT)
+	CopyRight = beego.Str2html(global.SYSTEM_RESET_COPYRIGHT)
 
 	StartTime = int64(0)
 

@@ -13,7 +13,6 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
-	github.com/prometheus/client_golang v1.7.0 // indirect
 	github.com/shirou/gopsutil v2.19.11+incompatible
 	github.com/shirou/w32 v0.0.0-20160930032740-bb4de0191aa4 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
