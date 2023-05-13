@@ -272,6 +272,12 @@ func (this *DocumentController) Upload() {
 func (this *DocumentController) Uploads() {
 	name := this.GetString("name")
 	file, _, err := this.GetFile("file")
+	if len(name) == 0 {
+		this.jsonError("文档名称不能为空！")
+	}
+	if err != nil {
+		this.jsonError("未上传文件！")
+	}
 
 	defer file.Close()
 
@@ -279,6 +285,7 @@ func (this *DocumentController) Uploads() {
 		this.Data["json"] = err.Error()
 		this.Abort("500")
 		this.ErrorLog("保存文件失败：" + err.Error())
+		this.jsonError("文件读取错误：" + err.Error())
 	}
 
 	bytes, err := ioutil.ReadFile(fmt.Sprintf("upload/%s", name))
