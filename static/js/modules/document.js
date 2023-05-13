@@ -214,7 +214,7 @@ var Document = {
             if (addBtn.length > 0) return;
 
 
-            var spanAddHtml = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='新建文档' onfocus='this.blur();'></span>";
+            var spanAddHtml = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='新建文档' onfocus='this.blur();'></span>"+"<span class='button edit' id='uploadBtn_" + treeNode.tId + "' title='上传文档' onfocus='this.blur();'></span>";
             sObj.append(spanAddHtml);
 
             // bind add
@@ -236,13 +236,8 @@ var Document = {
             });
 
             // 自定义上传按钮
-            var uploadBtn = $("#uploadBtn_" + treeNode.tId);
-            if (uploadBtn.length > 0) return;
-            var spanUpHtml = "<span class='button edit' id='uploadBtn_" + treeNode.tId + "' title='上传文档' onfocus='this.blur();'></span>";
-            sObj.append(spanUpHtml);
-
-            var uploadBtn = $("#uploadBtn_" + treeNode.tId);
-            if (uploadBtn) uploadBtn.bind("click", function () {
+            var uploadBtns = $("#uploadBtn_" + treeNode.tId);
+            if (uploadBtns) uploadBtns.bind("click", function () {
                 var content = "/document/upload?space_id=" + treeNode.spaceId + "&parent_id=" + treeNode.id;
                 layer.open({
                     type: 2,
